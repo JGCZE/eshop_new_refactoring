@@ -25,3 +25,12 @@ body {
     text-wrap: balance;
   }
 }
+
+.container {
+  @apply max-w-[1080px] mx-auto p-0;
+}
+
+.footer,
+.header {
+  @apply w-full bg-black text-white h-20;
+}
