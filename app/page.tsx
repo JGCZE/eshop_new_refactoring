@@ -3,8 +3,10 @@ import { getProducts } from "@/lib";
 import ItemCard from "../components/ItemCard";
 import { IItemData } from "@/types/customTypes";
 
-export default async function Home() {
-  const allProducts = await getProducts();
+export default async function Home({ searchParams }) {
+  const allProducts = await getProducts({
+    category: searchParams?.category || "",
+  });
 
   if (!allProducts) {
     return <div>Error loading products</div>;

@@ -1,22 +1,30 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { ReactElement, useState } from "react";
 
 const FilterButton = ({ title }: { title: string }): ReactElement => {
-  const [state, setState] = useState("");
-  console.log(state);
+  const [activeCategory, setActiveCategory] = useState("");
+  const router = useRouter();
+
+  const handleClick = () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("category", title);
+
+    const newPathname = `${
+      window.location.pathname
+    }?${searchParams.toString()}`;
+
+    router.push(newPathname);
+  };
+
+  //console.log(state);
+
   return (
     <div className="border-2 border-red-400">
       <div className="">
-        <input
-          type="checkbox"
-          id={title}
-          name={title}
-          className="border-2 border-green-400 w-20 h-20"
-          onChange={(e) => setState(e.target.id)}
-        />
-        <label htmlFor={title} className="">
+        <button className="w-32 h-20" onClick={(e) => handleClick(e)}>
           {title}
-        </label>
+        </button>
       </div>
     </div>
   );
