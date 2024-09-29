@@ -9,14 +9,14 @@ export default async function Home({ searchParams }) {
   });
 
   if (!allProducts) {
-    return <div>Error loading products</div>;
+    return <div> Error loading products </div>;
   }
 
-  const { products, categories } = allProducts;
+  const { products } = allProducts;
 
   return (
     <div className="container">
-      <Filters categories={categories} />
+      <Filters />
 
       <div className="w-full justify-between flex flex-wrap">
         {products.map((item: IItemData) => (

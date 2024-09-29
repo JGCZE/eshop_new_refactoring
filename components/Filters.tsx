@@ -10,7 +10,7 @@ const Filters = async () => {
   return (
     <div className="my-8 flex justify-between">
       <div className="flex justify-between items-start w-1/2">
-        {categories.map((category) => (
+        {categories?.map((category) => (
           <div className="">
             <FilterButton title={category} />
           </div>

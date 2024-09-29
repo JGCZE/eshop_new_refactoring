@@ -3,7 +3,6 @@ import resolveCategory from "./resolvers/resolveCategory";
 
 interface IReturn {
   products: Array<IItemData>;
-  categories: Array<string>;
 }
 
 export const getCategories = async (): Promise<Array<string> | undefined> => {
@@ -20,7 +19,6 @@ export const getCategories = async (): Promise<Array<string> | undefined> => {
     }
 
     const categories = await response.json();
-    //const categories = resolveCategory(products);
 
     return categories;
   } catch (error) {
@@ -32,30 +30,43 @@ export const getProducts = async (fetchParams: {
   category?: string;
 }): Promise<IReturn | undefined> => {
   try {
-    const selectedCategory = fetchParams.category;
-
     const URL = "https://fakestoreapi.com/products";
+    const selectedCategory = fetchParams.category;
+    const arrayOfCategory = selectedCategory
+      ? selectedCategory.split(",").filter(Boolean)
+      : [];
+
     if (!URL) {
       throw new Error("API URL is not defined");
     }
 
-    const params = selectedCategory
-      ? `${URL}/category/${selectedCategory}`
-      : URL;
+    let products = [];
 
-    console.log(params);
-    const response = await fetch(params);
+    if (arrayOfCategory.length > 0) {
+      const fetchPromises = arrayOfCategory.map((category) => {
+        const params = `${URL}/category/${category.trim()}`;
+        return fetch(params).then(async (response) => {
+          if (!response.ok) {
+            throw new Error(`API request failed for category ${category}`);
+          }
+          return response.json();
+        });
+      });
 
-    if (!response.ok) {
-      throw new Error("API request failed");
+      const productsArrays = await Promise.all(fetchPromises);
+      products = productsArrays.flat();
+    } else {
+      const response = await fetch(URL);
+
+      if (!response.ok) {
+        throw new Error("API request failed");
+      }
+
+      products = await response.json();
     }
-
-    const products = await response.json();
-    const categories = resolveCategory(products);
 
     return {
       products,
-      categories,
     };
   } catch (error) {
     console.error(error);
