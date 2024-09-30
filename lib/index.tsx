@@ -17,7 +17,7 @@ export const getCategories = async (): Promise<Array<string> | undefined> => {
     if (!response.ok) {
       throw new Error("API request failed");
     }
-
+    // resolve categories?? potřebuji přidat tlačítko reset
     const categories = await response.json();
 
     return categories;

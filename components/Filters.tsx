@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FilterButton from "./ui/FilterButton";
 import { useRouter } from "next/navigation";
 interface IProps {
@@ -13,19 +13,22 @@ const Filters = ({ categories }: IProps) => {
   );
   console.log(selectedCategories);
 
+  /* useEffect(() => {
+    if (selectedCategories.length > 1) {
+      console.log("USE EFFECT");
+      searchParams.set("category", selectedCategories);
+      const newPathname = `?${searchParams.toString()}`;
+      router.push(newPathname);
+      } 
+      }, [selectedCategories]);
+    */
+
   const handleChange = (e: { target: { innerText: string } }) => {
     const category = e.target.innerText;
     const searchParams = new URLSearchParams();
-    setSelectedCategories([...selectedCategories, category]); // useEffect
+    setSelectedCategories([...selectedCategories, category]);
 
-    if (selectedCategories.length > 0) {
-      searchParams.set("category", selectedCategories);
-    } else {
-      searchParams.set("category", category);
-    }
-
-    console.log("TEST");
-
+    searchParams.set("category", category);
     const newPathname = `?${searchParams.toString()}`;
     router.push(newPathname);
   };
