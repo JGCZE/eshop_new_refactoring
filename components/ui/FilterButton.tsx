@@ -1,16 +1,27 @@
 "use client";
+import clsx from "clsx";
 import React, { ReactElement, useState } from "react";
 
 interface IProps {
-  title: string;
   handleChange: any;
+  isActive?: Array<string>;
+  title: string;
 }
 
-const FilterButton = ({ title, handleChange }: IProps): ReactElement => {
+const FilterButton = ({
+  handleChange,
+  isActive,
+  title,
+}: IProps): ReactElement => {
   return (
-    <div className="border-2 border-red-400">
+    <div
+      className={clsx(
+        "border-2 border-black rounded-lg",
+        isActive?.includes(title) && "bg-yellow-300"
+      )}
+    >
       <div className="">
-        <button className="w-32 h-20" onClick={(e) => handleChange(e)}>
+        <button className="w-32 h-20 px-4" onClick={(e) => handleChange(e)}>
           {title}
         </button>
       </div>

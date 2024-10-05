@@ -11,34 +11,44 @@ const Filters = ({ categories }: IProps) => {
   const [selectedCategories, setSelectedCategories] = useState<Array<string>>(
     []
   );
-  console.log(selectedCategories);
 
-  /* useEffect(() => {
-    if (selectedCategories.length > 1) {
-      console.log("USE EFFECT");
-      searchParams.set("category", selectedCategories);
-      const newPathname = `?${searchParams.toString()}`;
-      router.push(newPathname);
-      } 
-      }, [selectedCategories]);
-    */
-
-  const handleChange = (e: { target: { innerText: string } }) => {
-    const category = e.target.innerText;
+  useEffect(() => {
     const searchParams = new URLSearchParams();
-    setSelectedCategories([...selectedCategories, category]);
 
-    searchParams.set("category", category);
+    searchParams.set("category", selectedCategories.join(","));
     const newPathname = `?${searchParams.toString()}`;
     router.push(newPathname);
-  };
+  }, [selectedCategories]);
+
+  const handleChange = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const category = e.currentTarget.textContent;
+
+      if (!category) return;
+
+      const checkIfExist = selectedCategories.find((cat) => cat === category);
+      if (checkIfExist) {
+        const removeExisting = selectedCategories.filter(
+          (allCat) => allCat !== checkIfExist
+        );
+        setSelectedCategories(removeExisting);
+      } else {
+        setSelectedCategories([...selectedCategories, category]);
+      }
+    },
+    [selectedCategories]
+  );
 
   return (
     <div className="my-8 flex justify-between">
       <div className="flex justify-between items-start w-1/2">
-        {categories?.map((category) => (
-          <div className="">
-            <FilterButton title={category} handleChange={handleChange} />
+        {categories?.map((category, index) => (
+          <div className="" key={index}>
+            <FilterButton
+              title={category}
+              handleChange={handleChange}
+              isActive={selectedCategories}
+            />
           </div>
         ))}
       </div>
